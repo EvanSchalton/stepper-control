@@ -3,10 +3,8 @@ import RPi.GPIO as GPIO
 import atexit
 
 class Stepper:
-	
-	print("GPIO High:", GPIO.HIGH)
-	print("GPIO Low:", GPIO.LOW)
-	STEP_SEQUENCE = [
+
+	CYCLE_STEPS = [
 		[1,0,0,0],
 		[1,1,0,0],
 		[0,1,0,0],
@@ -36,7 +34,7 @@ class Stepper:
 		
 		self.step_phase = 0
 		
-		self.steps = 8*(360 / step_angle)
+		self.steps = (360 / step_angle)
 		self.setSpeed(rpm)		
 		
 		GPIO.setmode(GPIO.BOARD)
@@ -52,7 +50,7 @@ class Stepper:
 	@property
 	def setPhase(self):
 		"""Sets the signal for the motors pins based on half-step"""
-		current_phase = self.STEP_SEQUENCE[self.step_phase]
+		current_phase = self.CYCLE_STEPS[self.cycle_phase]
 		#print("current_phase", current_phase)
 		GPIO.output(self.AIN1_PIN, current_phase[self.AIN1_INDEX])
 		GPIO.output(self.AIN2_PIN, current_phase[self.AIN2_INDEX])
@@ -60,12 +58,12 @@ class Stepper:
 		GPIO.output(self.BIN2_PIN, current_phase[self.BIN2_INDEX])
 
 	def oneStep(self, direction="CW"):
-		"""Iterates the step phase based on direction"""
+		"""Iterates the cycle phase based on direction"""
 		direction_sign = 1
 		if direction == "CCW":
 			direction_sign = -1
 		
-		self.step_phase = (self.step_phase+direction_sign) % len(self.STEP_SEQUENCE)
+		self.cycle_phase = (self.cycle_phase+direction_sign) % len(self.CYCLE_STEPS)
 		self.setPhase
 	
 	@property
@@ -85,7 +83,7 @@ class Stepper:
 		if angle<0:
 			direction = "CCW"
 			
-		steps = int(len(self.STEP_SEQUENCE)*abs(angle)/self.step_angle)
+		steps = int(abs(angle)/self.step_angle)
 		print("Rotate steps:", steps)
 		
 		self.step(steps, direction)

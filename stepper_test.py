@@ -1,9 +1,9 @@
 from stepper import Stepper
 import itertools
 
-RPM = 10
+RPM = 150
 if False:
-	pins = (13, 11, 15, 12)
+	pins = (13, 11, 12, 15)
 
 	for index, pinConfig in enumerate(itertools.permutations(pins)):
 		print(index, pinConfig)
@@ -13,7 +13,7 @@ if False:
 		pin4 = pinConfig[3]
 		
 		test = Stepper(pin1, pin2, pin3, pin4, RPM)
-		test.step_delay = .001
+		#test.step_delay = .0001
 		try:
 			while True:
 				test.oneStep()
@@ -27,6 +27,6 @@ if False:
 				print("SELECTED:", index, pinConfig)
 				break
 else:
-	test = Stepper(13, 11, 15, 12, RPM)
-	test.step_delay = .003
+	test = Stepper(13, 11, 12, 15, RPM)
+	#test.step_delay = .001
 	test.revolve(int(input("revolutions: ")))
