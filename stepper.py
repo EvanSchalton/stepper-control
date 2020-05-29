@@ -32,7 +32,7 @@ class Stepper:
 		
 		self.step_angle = step_angle
 		
-		self.step_phase = 0
+		self.cycle_phase = 0
 		
 		self.steps = (360 / step_angle)
 		self.setSpeed(rpm)		
